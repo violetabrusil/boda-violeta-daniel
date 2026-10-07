@@ -1,0 +1,23 @@
+CARPETA DE FOTOGRAFÍAS
+======================
+
+Coloca aquí tus fotos con EXACTAMENTE estos nombres (formato .jpg):
+
+  novios.jpg   -> foto de Violeta y Daniel (sección "Nuestra historia")
+  aslan.jpg    -> foto de Aslan
+  peach.jpg    -> foto de Peach
+  tobby.jpg    -> foto de Tobby
+  foto-01.jpg  \
+  foto-02.jpg   |
+  foto-03.jpg   |  galería "Nuestros recuerdos"
+  foto-04.jpg   |
+  foto-05.jpg   |
+  foto-06.jpg  /
+
+Mientras una foto no exista, la invitación muestra un marco elegante
+con el nombre del archivo esperado. Al agregarla, se reemplaza sola.
+
+Recomendaciones para que cargue rápido desde WhatsApp:
+  - Ancho máximo ~1600 px y peso menor a 400 KB por foto.
+  - Mascotas y "novios": mejor en vertical (3:4).
+  - Galería: mezcla verticales y horizontales; se recortan automáticamente.

@@ -1,0 +1,12 @@
+CARPETA DE MÚSICA
+=================
+
+Coloca aquí tu canción con EXACTAMENTE este nombre:
+
+  nuestra-cancion.mp3
+
+- La música NO se reproduce sola: el invitado debe pulsar el botón play.
+- Mientras el archivo no exista, el reproductor muestra el aviso
+  "Agrega musica/nuestra-cancion.mp3".
+- Recomendado: MP3 de 128–192 kbps (menos de ~5 MB) para que cargue rápido
+  desde el celular.
