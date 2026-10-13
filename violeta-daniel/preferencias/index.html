@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Preferencias · Violeta &amp; Daniel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F7F2EA; --warm:#FFFDF9; --lilac:#C9B8D8; --lav:#8E789D; --blue:#AFC1CC;
+  --coal:#4A4548; --coal-soft:#6b6468; --line:rgba(74,69,72,.18); --err:#a8483f; --ok:#4f7a5a;
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --bub:'Cormorant Garamond','Playfair Display',Georgia,serif;
+  --sans:'DM Sans','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--coal);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+main{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:clamp(2.5rem,8vw,5rem) 1.25rem 4rem}
+.eyebrow{font-size:.72rem;letter-spacing:.38em;text-transform:uppercase;color:var(--lav);font-weight:500;margin:0 0 1rem;text-align:center}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,7vw,3rem);line-height:1.15;margin:0;text-align:center}
+h1 em{font-style:italic;color:var(--lav)}
+.lead{text-align:center;color:var(--coal-soft);font-weight:300;margin:1rem auto 0;max-width:30em}
+form{position:relative;background:var(--warm);border:1px solid var(--line);padding:clamp(1.4rem,5vw,2.4rem);margin-top:2.2rem;display:grid;gap:2rem;overflow:hidden}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,label.lbl{font-family:var(--serif);font-size:1.2rem;padding:0;margin-bottom:.3rem;display:block;transition:color .4s var(--ease)}
+.hint{font-size:.9rem;color:var(--coal-soft);font-weight:300;margin:0 0 .9rem}
+input[type=text],textarea{width:100%;font:inherit;color:inherit;background:var(--cream);border:1px solid var(--line);border-radius:0;padding:.75rem .85rem;
+  transition:border-color .4s var(--ease),box-shadow .4s var(--ease),background .4s var(--ease),translate .4s var(--ease)}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--lav);background:#fff;box-shadow:0 0 0 4px rgba(201,184,216,.4),0 12px 26px -16px rgba(142,120,157,.7);translate:0 -2px}
+div:focus-within>label.lbl,fieldset:focus-within>legend{color:var(--lav)}
+textarea{min-height:6rem;resize:vertical}
+.song{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;margin-bottom:.5rem}
+.song button{width:2.6rem;background:none;border:1px solid var(--line);color:var(--coal-soft);transition:all .35s var(--ease)}
+.song button:hover{border-color:var(--lav);color:var(--lav);rotate:90deg}
+.btn{font:inherit;cursor:pointer}
+.add{background:none;border:1px dashed var(--lav);color:var(--lav);padding:.6rem 1rem;letter-spacing:.08em;font-size:.85rem;transition:background .3s,translate .3s var(--ease)}
+.add:hover{background:rgba(142,120,157,.08);translate:0 -2px}
+.add:active{translate:0 0}
+.add[hidden]{display:none}
+.opts{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:.9rem}
+.opts label{display:flex;gap:.5rem;align-items:center;cursor:pointer}
+.opts input{accent-color:var(--lav);width:1.1rem;height:1.1rem}
+.opts input:checked{animation:pop .45s var(--ease)}
+.collapse{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+.collapse.open{grid-template-rows:1fr}
+.collapse>div{overflow:hidden;min-height:0;visibility:hidden;opacity:0;transition:opacity .5s var(--ease),visibility 0s .55s}
+.collapse.open>div{visibility:visible;opacity:1;transition:opacity .5s var(--ease) .1s,visibility 0s}
+.send{position:relative;overflow:hidden;background:var(--lav);color:#fff;border:0;padding:1rem 1.5rem;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;font-weight:500;
+  transition:background .3s,translate .35s var(--ease),box-shadow .35s var(--ease)}
+.send:hover{background:#7a6589;translate:0 -2px;box-shadow:0 16px 30px -14px rgba(142,120,157,.9)}
+.send:disabled{opacity:.7;cursor:wait}
+.send.loading::before{content:"";display:inline-block;width:.9em;height:.9em;margin-right:.7em;vertical-align:-.12em;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+.status{text-align:center;font-size:.95rem;min-height:1.4em;margin:0}
+.status.ok{color:var(--ok)}.status.err{color:var(--err)}
+.status.pop{animation:pop .55s var(--ease)}
+.note{background:rgba(175,193,204,.25);border-left:3px solid var(--blue);padding:.7rem 1rem;font-size:.85rem;color:var(--coal-soft);margin-top:1.4rem}
+.note[hidden]{display:none}
+.back{display:block;text-align:center;margin-top:2rem;color:var(--lav);font-size:.9rem}
+[hidden]{display:none!important}
+
+/* barra de avance del formulario */
+.meter{position:absolute;left:0;top:0;height:3px;width:100%;background:rgba(201,184,216,.25)}
+.meter i{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(var(--m,0));transition:transform .8s var(--ease);
+  background:linear-gradient(90deg,var(--blue),var(--lilac),var(--lav))}
+
+/* check animado al guardar */
+.done{display:none;justify-content:center}
+.done.show{display:flex}
+.done svg{width:54px;height:54px}
+.done circle{fill:none;stroke:var(--lilac);stroke-width:2;stroke-dasharray:151;stroke-dashoffset:151;animation:draw .8s var(--ease) forwards}
+.done path{fill:none;stroke:var(--lav);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .5s var(--ease) .55s forwards}
+
+/* ====== Burbujas de géneros ====== */
+.vibe{margin-top:3rem;text-align:center}
+.vibe h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.15;margin:0}
+.vibe h2 em{font-style:italic;color:var(--lav)}
+.vibe .lead{margin-top:.8rem}
+@property --a{syntax:"<number>";inherits:true;initial-value:.12}
+.bubbles{--u:clamp(3.4px,1vw,6px);list-style:none;margin:1.6rem auto 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:calc(var(--u)*.2) calc(var(--u)*.6);max-width:640px;min-height:10rem}
+.bubbles li{--s:calc(var(--k)*var(--u));width:var(--s);height:var(--s);flex:none;margin:calc(var(--u)*-1.1) calc(var(--u)*-.5);
+  translate:calc(var(--mx,0)*var(--p,1)*1px) calc(var(--my,0)*var(--p,1)*1px);transition:translate .6s var(--ease)}
+.b{--a:.12;position:relative;width:100%;height:100%;border:1px solid rgba(255,255,255,.85);border-radius:50%;padding:0;cursor:pointer;display:grid;place-items:center;
+  font-family:var(--bub);font-style:italic;font-weight:500;font-size:max(.9rem,calc(var(--s)*.17));line-height:1.05;text-wrap:balance;letter-spacing:.025em;
+  color:var(--tc,var(--coal));
+  background:
+    radial-gradient(circle at 50% 50%,rgba(var(--rgb),var(--a)) 52%,rgba(var(--rgb),calc(var(--a) + .22)) 100%),
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,.7),rgba(255,255,255,.1) 34%,transparent 58%);
+  -webkit-backdrop-filter:blur(5px) saturate(1.2);backdrop-filter:blur(5px) saturate(1.2);
+  box-shadow:
+    inset 0 0 calc(var(--s)*.16) rgba(255,255,255,.75),
+    inset calc(var(--s)*-.05) calc(var(--s)*-.07) calc(var(--s)*.16) rgba(var(--rgb),.28);
+  transition:scale .6s var(--ease),box-shadow .6s var(--ease),--a .6s;-webkit-tap-highlight-color:transparent;overflow:hidden;isolation:isolate}
+/* brillo y borde tornasolado muy tenue, como una pompa de jabón */
+.b::before{content:"";position:absolute;left:15%;top:9%;width:34%;height:20%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.9),transparent 72%);rotate:-26deg;z-index:-1}
+.b::after{content:"";position:absolute;inset:0;border-radius:50%;z-index:-1;pointer-events:none;opacity:.55;
+  background:conic-gradient(from 210deg,rgba(255,220,232,.5),rgba(205,226,255,.5),rgba(222,255,238,.4),rgba(255,240,205,.5),rgba(255,220,232,.5));
+  -webkit-mask:radial-gradient(circle,transparent 66%,#000 94%);mask:radial-gradient(circle,transparent 66%,#000 94%)}
+.b span{display:block;padding:0 .35em;transition:translate .45s var(--ease)}
+.b:focus-visible{outline:none}
+.b:focus-visible::after{opacity:1;-webkit-mask:none;mask:none;box-shadow:inset 0 0 0 2px rgba(var(--rgb),.85);background:none}
+.eq2{position:absolute;left:50%;bottom:17%;translate:-50% 12px;display:flex;gap:3px;align-items:flex-end;height:calc(var(--s)*.16);opacity:0;transition:opacity .35s,translate .45s var(--ease)}
+.eq2 i{width:max(2px,calc(var(--s)*.02));height:25%;background:currentColor;border-radius:2px;opacity:.7}
+.b.hot .eq2,.b:focus-visible .eq2{opacity:.9;translate:-50% 0}
+.b.hot span,.b:focus-visible span{translate:0 calc(var(--s)*-.07)}
+.b.hot,.b:focus-visible{--a:.24;scale:1.1;box-shadow:inset 0 0 calc(var(--s)*.2) rgba(255,255,255,.85),inset calc(var(--s)*-.05) calc(var(--s)*-.07) calc(var(--s)*.16) rgba(var(--rgb),.3)}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:rgba(255,255,255,.5);translate:-50% -50%;scale:0;z-index:-1}
+
+.k1{--k:40;--rgb:170,146,196;--tc:#5b4a6b}
+.k2{--k:35;--rgb:140,175,200;--tc:#3f5b6b}
+.k3{--k:31;--rgb:214,160,176;--tc:#7a4a5a}
+.k4{--k:28;--rgb:190,150,185;--tc:#64496f}
+.k5{--k:26;--rgb:205,178,120;--tc:#6b5a3a}
+.k6{--k:24;--rgb:140,178,152;--tc:#4a6552}
+.k7{--k:21;--rgb:212,168,150;--tc:#7a5340}
+.k8{--k:20;--rgb:180,165,205;--tc:#5b4a6b}
+.k9{--k:20;--rgb:150,185,205;--tc:#3f5b6b}
+.k10{--k:19;--rgb:215,195,140;--tc:#6b5a3a}
+.k11{--k:21;--rgb:130,170,168;--tc:#3f6360}
+
+@media (prefers-reduced-motion:no-preference){
+  .js .bubbles li{scale:0;opacity:0}
+  .js .bubbles.in li{animation:bubbleIn 1.1s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--n)*.09s)}
+  .bubbles .b{animation:floatB var(--dur,7s) ease-in-out var(--del,0s) infinite}
+  .b.hot,.b:focus-visible{animation:wiggle .7s var(--ease)}
+  .b.hot .eq2 i,.b:focus-visible .eq2 i{animation:eqb .8s ease-in-out infinite}
+  .b.hot .eq2 i:nth-child(2){animation-delay:.12s}.b.hot .eq2 i:nth-child(3){animation-delay:.24s}.b.hot .eq2 i:nth-child(4){animation-delay:.36s}.b.hot .eq2 i:nth-child(5){animation-delay:.48s}
+  .ripple{animation:ripple .8s ease-out forwards}
+  @keyframes bubbleIn{0%{scale:0;opacity:0;translate:0 40px}60%{opacity:1}100%{scale:1;opacity:1;translate:0 0}}
+  @keyframes floatB{0%,100%{translate:0 0}33%{translate:calc(var(--s)*.03) calc(var(--s)*-.06)}66%{translate:calc(var(--s)*-.035) calc(var(--s)*.03)}}
+  @keyframes wiggle{0%{rotate:0}25%{rotate:-5deg}55%{rotate:4deg}80%{rotate:-2deg}100%{rotate:0}}
+  @keyframes eqb{0%,100%{height:20%}50%{height:100%}}
+  @keyframes ripple{to{scale:1;opacity:0}}
+}
+@media (prefers-reduced-motion:reduce){.js .bubbles li{scale:1;opacity:1}.b.hot,.b:focus-visible{scale:1.08}}
+
+@media(max-width:520px){.song{grid-template-columns:1fr auto}.song .artist{grid-column:1}.song button{grid-row:1;grid-column:2}}
+
+/* ====== Animaciones ====== */
+.fx-glow{position:fixed;inset:-10%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 32% at 20% 25%,rgba(201,184,216,.38),transparent 70%),radial-gradient(34% 30% at 82% 72%,rgba(175,193,204,.40),transparent 70%),radial-gradient(26% 24% at 72% 15%,rgba(255,253,249,.9),transparent 70%);
+  animation:glowDrift 16s ease-in-out infinite alternate}
+.fx-petals{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.fx-burst{position:fixed;left:0;top:0;pointer-events:none;z-index:320;line-height:1;will-change:transform,opacity}
+
+@media (prefers-reduced-motion:no-preference){
+  .rise{animation:rise 1s var(--ease) both;animation-delay:calc(var(--i,0)*.12s + .15s)}
+  h1 .w{display:inline-block;animation:word 1s var(--ease) both;animation-delay:calc(var(--wi,0)*.1s + .2s)}
+  h1 em{display:inline-block;animation:sheen 7s linear 2s infinite;background:linear-gradient(100deg,var(--lav) 40%,#d6c6e4 50%,var(--lav) 60%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .song.new{animation:songIn .6s var(--ease) both}
+  .song.out{animation:songOut .35s var(--ease) both}
+  .send::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.5) 50%,transparent 62%);translate:-130% 0;animation:shine 5s ease-in-out 1.5s infinite}
+  .status.err{animation:shake .45s}
+  @keyframes rise{from{opacity:0;translate:0 24px;filter:blur(4px)}to{opacity:1;translate:0 0;filter:none}}
+  @keyframes word{from{opacity:0;translate:0 .55em;rotate:4deg;filter:blur(5px)}to{opacity:1;translate:0 0;rotate:0deg;filter:none}}
+  @keyframes songIn{from{opacity:0;translate:-18px 0;scale:.98}to{opacity:1;translate:0 0;scale:1}}
+  @keyframes songOut{to{opacity:0;translate:24px 0;scale:.96}}
+  @keyframes shine{0%,55%{translate:-130% 0}100%{translate:130% 0}}
+  @keyframes sheen{0%{background-position:130% 0}100%{background-position:-130% 0}}
+  @keyframes shake{20%,60%{translate:-6px 0}40%,80%{translate:6px 0}}
+  @keyframes glowDrift{0%{translate:-3% -2%;scale:1}50%{translate:3% 2%;scale:1.08}100%{translate:-2% 3%;scale:1.03}}
+}
+@keyframes pop{0%{scale:.6}60%{scale:1.25}100%{scale:1}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.fx-glow,.fx-petals{display:none}*{animation:none!important;transition:none!important}.done circle,.done path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow rise" style="--i:0">Gracias por confirmar</p>
+  <h1 id="ttl">Hagamos esta noche <em>también tuya</em></h1>
+  <p class="lead rise" style="--i:4">Cuéntanos qué canciones quieres escuchar ese día y si debemos cuidar algo en tu comida.</p>
+
+  <p class="note" id="loaded" hidden>Cargamos tus respuestas anteriores. Puedes cambiarlas y guardar de nuevo.</p>
+
+
+  <section class="vibe rise" style="--i:5" aria-labelledby="vibeT">
+    <p class="eyebrow">La pista de baile</p>
+    <h2 id="vibeT">Lo que va a <em>sonar</em></h2>
+    <p class="lead">Mientras más grande la burbuja, más suena ese día.</p>
+    <ul class="bubbles" id="bubbles" aria-label="Géneros de música de la fiesta">
+    <li class="k2" style="--n:0;--p:0.6;"><button type="button" class="b" style="--dur:6s;--del:-0s" aria-label="Cumbia"><span>Cumbia</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k1" style="--n:1;--p:1.2;"><button type="button" class="b" style="--dur:8s;--del:-6s" aria-label="Merengue"><span>Merengue</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k3" style="--n:2;--p:0.9;"><button type="button" class="b" style="--dur:10s;--del:-5s" aria-label="Salsa"><span>Salsa</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k9" style="--n:3;--p:0.7;"><button type="button" class="b" style="--dur:7s;--del:-4s" aria-label="Pop latino"><span>Pop latino</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k4" style="--n:4;--p:1.1;"><button type="button" class="b" style="--dur:9s;--del:-3s" aria-label="Bachata"><span>Bachata</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k7" style="--n:5;--p:0.8;"><button type="button" class="b" style="--dur:6s;--del:-2s" aria-label="Vallenato"><span>Vallenato</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k5" style="--n:6;--p:1;"><button type="button" class="b" style="--dur:8s;--del:-1s" aria-label="Reggaetón"><span>Reggaetón</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k8" style="--n:7;--p:0.9;"><button type="button" class="b" style="--dur:10s;--del:-0s" aria-label="Baladas"><span>Baladas</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k6" style="--n:8;--p:1.2;"><button type="button" class="b" style="--dur:7s;--del:-6s" aria-label="Banda"><span>Banda</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k10" style="--n:9;--p:0.7;"><button type="button" class="b" style="--dur:9s;--del:-5s" aria-label="Pasillo"><span>Pasillo</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    <li class="k11" style="--n:10;--p:1;"><button type="button" class="b" style="--dur:6s;--del:-4s" aria-label="Rock en español"><span>Rock en español</span><i class="eq2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></i></button></li>
+    </ul>
+  </section>
+
+  <form id="f" novalidate class="rise" style="--i:6">
+    <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+
+    <div>
+      <label class="lbl" for="nombre">Tu nombre</label>
+      <input type="text" id="nombre" name="nombre" autocomplete="name" maxlength="80" required>
+    </div>
+
+    <fieldset>
+      <legend>Canciones para ese día</legend>
+      <p class="hint">Hasta 5 canciones que te harían bailar o recordar algo bonito.</p>
+      <div id="songs"></div>
+      <button type="button" class="btn add" id="addSong">+ Agregar otra canción</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>¿Tienes alguna alergia alimentaria?</legend>
+      <div class="opts">
+        <label><input type="radio" name="alergia" value="no" checked> No</label>
+        <label><input type="radio" name="alergia" value="si"> Sí</label>
+      </div>
+      <div class="collapse" id="alergiaBox">
+        <div>
+          <label class="hint" for="alergiaDetalle" style="display:block">¿A qué? (por ejemplo: maní, mariscos, lactosa, gluten)</label>
+          <textarea id="alergiaDetalle" maxlength="400"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="done" id="done" aria-hidden="true">
+      <svg viewBox="0 0 54 54"><circle cx="27" cy="27" r="24"/><path d="M16 28l8 8 15-17"/></svg>
+    </div>
+    <button class="btn send" id="send" type="submit">Guardar respuestas</button>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="note" id="demo" hidden>Modo de prueba: las respuestas solo se guardan en este navegador hasta conectar la hoja de cálculo.</p>
+  <a class="back" href="../">← Volver a la invitación</a>
+</main>
+
+<script>
+(function(){
+  'use strict';
+  /* URL de la Web App de Google Apps Script (ver apps-script.gs). Vacío = modo prueba. */
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwwPiJIdcPqjqmBBI0Yqsjajr38UacMXb4PWrdMSp1pO9YTEUM6N28hPb1FMAY1mXI/exec';
+  var MAX_SONGS = 5;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var params = new URLSearchParams(location.search);
+  var code = (params.get('i') || '').replace(/[^A-Za-z0-9_-]/g,'').slice(0,40);
+
+  var songsBox = $('songs'), addBtn = $('addSong'), statusEl = $('status');
+  var store = {
+    get: function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+    set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  };
+
+  function slug(s){
+    return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+  }
+  function keyFor(name){ return code || ('n-' + slug(name)); }
+
+  /* ---------- título: palabra por palabra ---------- */
+  (function(){
+    var wi = 0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(n){
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.nodeValue.split(/(\s+)/).forEach(function(p){
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); return; }
+            var sp = document.createElement('span'); sp.className = 'w'; sp.style.setProperty('--wi', wi++); sp.textContent = p; frag.appendChild(sp);
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'EM') { walk(n); }
+        else if (n.nodeType === 1) { walk(n); }
+      });
+    })($('ttl'));
+  })();
+
+  /* ---------- avance ---------- */
+  function progress(){
+    var d = read(), p = 0;
+    if (d.nombre) p += .4;
+    if (d.canciones.length) p += .4;
+    if (d.alergia === 'no' || d.alergiaDetalle) p += .2;
+    $('meter').style.setProperty('--m', p);
+  }
+
+  /* ---------- canciones ---------- */
+  function addSong(title, artist, animate){
+    if (songsBox.children.length >= MAX_SONGS) return;
+    var row = document.createElement('div'); row.className = 'song' + (animate ? ' new' : '');
+    var t = document.createElement('input'); t.type='text'; t.placeholder='Canción'; t.maxLength=80; t.setAttribute('aria-label','Canción'); t.value = title||'';
+    var a = document.createElement('input'); a.type='text'; a.placeholder='Artista'; a.className='artist'; a.maxLength=80; a.setAttribute('aria-label','Artista'); a.value = artist||'';
+    var x = document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','Quitar canción');
+    x.onclick = function(){
+      function gone(){ row.remove(); if(!songsBox.children.length) addSong(); refresh(); progress(); }
+      if (reduce) { gone(); return; }
+      row.classList.remove('new'); row.classList.add('out'); setTimeout(gone, 330);
+    };
+    row.append(t,a,x); songsBox.append(row); refresh();
+    if (animate) t.focus();
+  }
+  function refresh(){ addBtn.hidden = songsBox.children.length >= MAX_SONGS; }
+  addBtn.onclick = function(){ addSong('', '', true); };
+
+  /* ---------- alergias ---------- */
+  function syncAlergia(){
+    var si = document.querySelector('input[name=alergia]:checked').value === 'si';
+    $('alergiaBox').classList.toggle('open', si);
+    if (si && !reduce) setTimeout(function(){ $('alergiaDetalle').focus({preventScroll:true}); }, 350);
+  }
+  document.querySelectorAll('input[name=alergia]').forEach(function(r){ r.onchange = function(){ syncAlergia(); progress(); }; });
+  $('f').addEventListener('input', progress);
+
+  /* ---------- cargar / leer ---------- */
+  function fill(d){
+    if (!d) return;
+    if (d.nombre) $('nombre').value = d.nombre;
+    songsBox.innerHTML = '';
+    (d.canciones || []).slice(0,MAX_SONGS).forEach(function(c){ addSong(c.titulo, c.artista); });
+    if (!songsBox.children.length) addSong();
+    var si = d.alergia === 'si';
+    document.querySelector('input[name=alergia][value=' + (si?'si':'no') + ']').checked = true;
+    $('alergiaDetalle').value = d.alergiaDetalle || '';
+    $('alergiaBox').classList.toggle('open', si);
+    $('loaded').hidden = false;
+    progress();
+  }
+  function read(){
+    var songs = [];
+    songsBox.querySelectorAll('.song').forEach(function(r){
+      var i = r.querySelectorAll('input'), t = i[0].value.trim(), a = i[1].value.trim();
+      if (t || a) songs.push({titulo:t, artista:a});
+    });
+    var si = document.querySelector('input[name=alergia]:checked').value === 'si';
+    return {
+      nombre: $('nombre').value.trim(),
+      canciones: songs,
+      alergia: si ? 'si' : 'no',
+      alergiaDetalle: si ? $('alergiaDetalle').value.trim() : ''
+    };
+  }
+  function say(msg, cls){
+    statusEl.textContent = msg; statusEl.className = 'status ' + (cls||'');
+    if (cls) { void statusEl.offsetWidth; statusEl.classList.add(cls === 'ok' ? 'pop' : 'err'); }
+  }
+
+  /* ---------- efectos: brillo, pétalos y corazones ---------- */
+  var burst = function(){}, NOTES = null;
+  if (!reduce) {
+    var glow = document.createElement('div'); glow.className = 'fx-glow'; glow.setAttribute('aria-hidden','true'); document.body.insertBefore(glow, document.body.firstChild);
+
+    var cv = document.createElement('canvas'); cv.className = 'fx-petals'; cv.setAttribute('aria-hidden','true'); document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'), W=0, H=0, petals=[], last=0, raf=0;
+    var COLORS = ['201,184,216','175,193,204','222,205,235','233,225,214'];
+    var make = function(any){ return { x:Math.random()*W, y:any?Math.random()*H:-20, s:5+Math.random()*7, vy:22+Math.random()*30, amp:14+Math.random()*26, ph:Math.random()*6.28, fr:.5+Math.random()*.8, rot:Math.random()*6.28, vr:(Math.random()-.5)*1.6, c:COLORS[(Math.random()*COLORS.length)|0], a:.45+Math.random()*.35 }; };
+    var size = function(){
+      var dpr = Math.min(2, window.devicePixelRatio||1); W = innerWidth; H = innerHeight;
+      cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      var n = Math.max(7, Math.min(14, Math.round(W/60)));
+      while (petals.length < n) petals.push(make(true)); petals.length = n;
+    };
+    var draw = function(t){
+      var dt = Math.min(.05, (t-last)/1000 || 0); last = t; ctx.clearRect(0,0,W,H);
+      petals.forEach(function(p,i){
+        p.y += p.vy*dt; p.ph += p.fr*dt; p.rot += p.vr*dt;
+        if (p.y > H+20) petals[i] = make(false);
+        ctx.save(); ctx.translate(p.x + Math.sin(p.ph)*p.amp, p.y); ctx.rotate(p.rot);
+        ctx.scale(1, .55 + .45*Math.abs(Math.cos(p.ph*1.7)));
+        ctx.fillStyle = 'rgba('+p.c+','+p.a+')'; ctx.beginPath(); ctx.ellipse(0,0,p.s,p.s*.58,0,0,6.2832); ctx.fill(); ctx.restore();
+      });
+      raf = requestAnimationFrame(draw);
+    };
+    size(); addEventListener('resize', size); raf = requestAnimationFrame(draw);
+    document.addEventListener('visibilitychange', function(){ cancelAnimationFrame(raf); if (!document.hidden) { last = performance.now(); raf = requestAnimationFrame(draw); } });
+
+    NOTES = ['♪','♫','♬','♩'];
+    var SYM = ['♥','♡','✿','❀'], COL = ['#8E789D','#C9B8D8','#AFC1CC','#b79ac9'];
+    burst = function(x, y, n, sym){
+      for (var i = 0; i < (n||14); i++) {
+        var h = document.createElement('span'); h.className = 'fx-burst'; h.setAttribute('aria-hidden','true');
+        var set = sym || SYM; h.textContent = set[(Math.random()*set.length)|0]; h.style.color = COL[(Math.random()*COL.length)|0]; h.style.fontSize = (12+Math.random()*16)+'px';
+        document.body.appendChild(h);
+        var a = Math.random()*6.2832, d = 60+Math.random()*90;
+        var an = h.animate([
+          { transform:'translate('+x+'px,'+y+'px) scale(.4)', opacity:1 },
+          { transform:'translate('+(x+Math.cos(a)*d)+'px,'+(y+Math.sin(a)*d-50)+'px) scale(1.1) rotate('+(Math.random()*90-45)+'deg)', opacity:0 }
+        ], { duration: 1000+Math.random()*600, easing:'cubic-bezier(.22,.7,.2,1)' });
+        an.onfinish = (function(el){ return function(){ el.remove(); }; })(h);
+      }
+    };
+    $('addSong').addEventListener('click', function(e){ burst(e.clientX, e.clientY, 6); });
+  }
+  function celebrate(){
+    var r = $('send').getBoundingClientRect();
+    burst(r.left + r.width/2, r.top + r.height/2, 22);
+    var d = $('done'); d.classList.remove('show'); void d.offsetWidth; d.classList.add('show');
+  }
+
+
+  /* ---------- burbujas de géneros ---------- */
+  (function(){
+    var box = $('bubbles'); if (!box) return;
+    document.documentElement.classList.add('js');
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { box.classList.add('in'); io.disconnect(); } }); }, { threshold: .15 });
+      io.observe(box);
+    } else { box.classList.add('in'); }
+
+    var timers = new WeakMap();
+    function hot(b, on, hold){
+      clearTimeout(timers.get(b));
+      if (on) { b.classList.add('hot'); if (hold) timers.set(b, setTimeout(function(){ b.classList.remove('hot'); }, hold)); }
+      else b.classList.remove('hot');
+    }
+    box.querySelectorAll('.b').forEach(function(b){
+      b.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse') hot(b, true); });
+      b.addEventListener('pointerleave', function(e){ if (e.pointerType === 'mouse') hot(b, false); });
+      b.addEventListener('pointerdown', function(e){
+        hot(b, true, e.pointerType === 'mouse' ? 0 : 1400);       // en el celular el efecto dura un momento
+        if (reduce) return;
+        var r = b.getBoundingClientRect(), rp = document.createElement('i'); rp.className = 'ripple';
+        var d = Math.max(r.width, r.height) * 2;
+        rp.style.cssText = 'width:'+d+'px;height:'+d+'px;left:'+(e.clientX - r.left)+'px;top:'+(e.clientY - r.top)+'px';
+        b.appendChild(rp); setTimeout(function(){ rp.remove(); }, 850);
+        burst(e.clientX, e.clientY, 7, NOTES);
+      });
+    });
+
+    /* las burbujas se apartan un poco del cursor */
+    if (!reduce && window.matchMedia('(hover:hover)').matches) {
+      var lis = Array.prototype.slice.call(box.children);
+      box.addEventListener('pointermove', function(e){
+        lis.forEach(function(li){
+          var r = li.getBoundingClientRect(), dx = r.left + r.width/2 - e.clientX, dy = r.top + r.height/2 - e.clientY;
+          var dist = Math.max(40, Math.hypot(dx, dy)), f = Math.max(0, 1 - dist/260) * 26;
+          li.style.setProperty('--mx', (dx/dist*f).toFixed(1)); li.style.setProperty('--my', (dy/dist*f).toFixed(1));
+        });
+      });
+      box.addEventListener('pointerleave', function(){ lis.forEach(function(li){ li.style.setProperty('--mx', 0); li.style.setProperty('--my', 0); }); });
+    }
+  })();
+
+  /* ---------- init ---------- */
+  addSong(); syncAlergia(); progress();
+  if (!ENDPOINT) $('demo').hidden = false;
+
+  var cached = store.get('vd-pref-' + (code || 'anon'));
+  if (cached) { try { fill(JSON.parse(cached)); } catch(e){} }
+
+  if (ENDPOINT && code) {
+    fetch(ENDPOINT + '?i=' + encodeURIComponent(code))
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if (j && j.found) fill(j.data); })
+      .catch(function(){ /* sin red: se queda lo local */ });
+  }
+
+  /* ---------- guardar ---------- */
+  $('f').addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = read();
+    if (!d.nombre) { say('Escribe tu nombre para continuar.', 'err'); $('nombre').focus(); return; }
+    if (d.alergia === 'si' && !d.alergiaDetalle) { say('Cuéntanos a qué eres alérgico/a.', 'err'); $('alergiaDetalle').focus(); return; }
+
+    var key = keyFor(d.nombre);
+    store.set('vd-pref-' + (code || 'anon'), JSON.stringify(d));
+    if (!ENDPOINT) { say('Guardado en este navegador (modo de prueba).', 'ok'); celebrate(); return; }
+
+    var btn = $('send'); btn.disabled = true; btn.classList.add('loading'); say('Guardando…');
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},   /* evita preflight CORS */
+      body: JSON.stringify({ clave: key, nombre: d.nombre, canciones: d.canciones, alergia: d.alergia, alergiaDetalle: d.alergiaDetalle })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if (!j.ok) throw new Error(); say('¡Listo! Guardamos tus respuestas. Puedes volver a entrar y cambiarlas.', 'ok'); celebrate(); })
+    .catch(function(){ say('No pudimos guardar. Revisa tu conexión e inténtalo de nuevo.', 'err'); })
+    .then(function(){ btn.disabled = false; btn.classList.remove('loading'); });
+  });
+})();
+</script>
+</body>
+</html>
