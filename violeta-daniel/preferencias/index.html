@@ -476,6 +476,9 @@ textarea{min-height:6rem;resize:vertical}
     var d = read();
     if (!d.nombre) { say('Escribe tu nombre para continuar.', 'err'); $('nombre').focus(); return; }
     if (d.alergia === 'si' && !d.alergiaDetalle) { say('Cuéntanos a qué eres alérgico/a.', 'err'); $('alergiaDetalle').focus(); return; }
+    /* debe existir al menos una canción con título */
+    var hayCancion = d.canciones.some(function(c){ return c.titulo; });
+    if (!hayCancion) { say('Agrega al menos una canción para guardar.', 'err'); songsBox.querySelector('input').focus(); return; }
 
     var key = keyFor(d.nombre);
     store.set('vd-pref-' + (code || 'anon'), JSON.stringify(d));
